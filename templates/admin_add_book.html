@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Thêm sách{% endblock %}
+{% block content %}
+<h2 class="mb-3">Thêm sách mới</h2>
+<form method="post" class="card p-4" style="max-width:560px">
+  <div class="mb-3">
+    <label class="form-label">ISBN *</label>
+    <input name="isbn" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Tiêu đề *</label>
+    <input name="title" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Tác giả *</label>
+    <input name="author" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Chủ đề</label>
+    <input name="subject" class="form-control">
+  </div>
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <label class="form-label">Năm XB</label>
+      <input name="year" type="number" class="form-control">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label class="form-label">Số bản quyền số</label>
+      <input name="copies" type="number" class="form-control" value="1" min="1">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label class="form-label">Thời hạn mượn (ngày)</label>
+      <input name="loan_days" type="number" class="form-control" value="14" min="1">
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Trạng thái</label>
+    <select name="status" class="form-select">
+      <option value="Available">Available (Sẵn sàng)</option>
+      <option value="Hidden">Hidden (Ẩn)</option>
+      <option value="NoCopyright">NoCopyright (Hết bản quyền)</option>
+      <option value="Archived">Archived (Lưu trữ)</option>
+    </select>
+  </div>
+  <div class="mb-3 form-check">
+    <input type="checkbox" name="has_digital_file" class="form-check-input" id="hdf" checked>
+    <label class="form-check-label" for="hdf">Có file nội dung số</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Thêm sách</button>
+  <a href="{{ url_for('admin_books') }}" class="btn btn-link">Hủy</a>
+</form>
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Chi tiết TK — {{ user.full_name }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2><i class="bi bi-person-gear"></i> {{ user.full_name }}</h2>
+  <a href="{{ url_for('admin_users') }}" class="btn btn-outline-secondary btn-sm">Danh sách user</a>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-5">
+    <div class="card border-primary">
+      <div class="card-header bg-primary text-white">Thông tin & trạng thái</div>
+      <div class="card-body">
+        <p><strong>Mã ĐH:</strong> {{ user.university_id }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Vai trò:</strong> <span class="badge bg-info text-dark">{{ user.role }}</span></p>
+        <p><strong>Ngày tạo TK:</strong> {{ user.created_at.strftime('%d/%m/%Y %H:%M') }}</p>
+        <p><strong>Trạng thái:</strong>
+          <span class="badge bg-{{ 'success' if user.account_status == 'Bình thường' else 'danger' }}">
+            {{ user.account_status }}
+          </span>
+        </p>
+        <p><strong>Quyền mượn/đọc:</strong>
+          {% if user.can_borrow %}
+          <span class="text-success">Đang có</span>
+          {% else %}
+          <span class="text-danger">ĐÃ NGẮT</span>
+          {% endif %}
+        </p>
+        {% if user.ban_reason %}<p><strong>Lý do:</strong> {{ user.ban_reason }}</p>{% endif %}
+        {% if user.ban_until %}<p><strong>Ban đến:</strong> {{ user.ban_until.strftime('%d/%m/%Y %H:%M') }}</p>{% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-7">
+    <div class="card">
+      <div class="card-header">Hành động quản trị</div>
+      <div class="card-body">
+        <form method="post" action="{{ url_for('admin_toggle_user', user_id=user.id) }}" class="d-flex flex-wrap gap-2 align-items-end">
+          <input type="text" name="reason" class="form-control form-control-sm" style="max-width:220px" placeholder="Lý do (nếu khóa/ban)">
+          <button name="action" value="toggle_borrow" class="btn btn-warning btn-sm">
+            {{ 'Khôi phục quyền mượn' if not user.can_borrow else 'Ngắt quyền mượn' }}
+          </button>
+          <button name="action" value="ban_temp" class="btn btn-outline-danger btn-sm">Ban tạm 5 ngày</button>
+          <input type="hidden" name="days" value="5">
+          <button name="action" value="ban_perm" class="btn btn-danger btn-sm">Ban vĩnh viễn</button>
+          <button name="action" value="unban" class="btn btn-success btn-sm">Unban / Mở khóa</button>
+          <button name="action" value="toggle_active" class="btn btn-outline-secondary btn-sm">Đảo Active/Locked</button>
+        </form>
+        <p class="text-muted small mt-2 mb-0">Ngắt quyền mượn: user vẫn đăng nhập được nhưng không mượn/đọc sách. Ban: khóa đăng nhập.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ul class="nav nav-tabs mb-3">
+  <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#loans">Lịch sử mượn ({{ loans|length }})</a></li>
+  <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#violations">Vi phạm ({{ violations|length }})</a></li>
+  <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#fines">Phạt ({{ fines|length }})</a></li>
+  <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#audit">Audit ({{ audit|length }})</a></li>
+</ul>
+<div class="tab-content">
+  <div class="tab-pane fade show active" id="loans">
+    <table class="table table-sm table-hover bg-white">
+      <thead class="table-light"><tr><th>#</th><th>Sách</th><th>Yêu cầu</th><th>Hạn</th><th>Status</th><th>Lý do thu hồi</th></tr></thead>
+      <tbody>
+        {% for l in loans %}
+        <tr>
+          <td>{{ l.id }}</td>
+          <td>{{ l.book.title if l.book else '—' }}</td>
+          <td>{{ l.request_date.strftime('%d/%m/%Y') }}</td>
+          <td>{{ l.due_date.strftime('%d/%m/%Y') if l.due_date else '—' }}</td>
+          <td>{{ l.status }}</td>
+          <td>{{ l.revoked_reason or '' }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-muted">Trống</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="tab-pane fade" id="violations">
+    <table class="table table-sm table-hover bg-white">
+      <thead class="table-light"><tr><th>#</th><th>Loại</th><th>Mô tả</th><th>Mức</th><th>Status</th><th>Xử lý</th><th>Thời gian</th></tr></thead>
+      <tbody>
+        {% for v in violations %}
+        <tr>
+          <td>{{ v.id }}</td>
+          <td>{{ v.violation_type }}</td>
+          <td>{{ v.description[:100] }}</td>
+          <td>{{ v.severity }}</td>
+          <td>{{ v.status }}</td>
+          <td>{{ v.action_taken or '—' }}</td>
+          <td>{{ v.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-muted">Trống</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="tab-pane fade" id="fines">
+    <table class="table table-sm table-hover bg-white">
+      <thead class="table-light"><tr><th>#</th><th>Số tiền</th><th>Ngày QH</th><th>Status</th><th>Ngày</th></tr></thead>
+      <tbody>
+        {% for f in fines %}
+        <tr>
+          <td>{{ f.id }}</td>
+          <td>{{ '{:,.0f}'.format(f.amount) }} VND</td>
+          <td>{{ f.days_overdue }}</td>
+          <td>{{ f.status }}</td>
+          <td>{{ f.created_at.strftime('%d/%m/%Y') }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-muted">Trống</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="tab-pane fade" id="audit">
+    <table class="table table-sm table-hover bg-white">
+      <thead class="table-light"><tr><th>Thời gian</th><th>Action</th><th>Chi tiết</th></tr></thead>
+      <tbody>
+        {% for a in audit %}
+        <tr>
+          <td>{{ a.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+          <td>{{ a.action }}</td>
+          <td>{{ a.details }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" class="text-muted">Trống</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

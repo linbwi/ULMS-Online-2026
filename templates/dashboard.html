@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4">Xin chào, {{ current_user.full_name }}!</h2>
+
+{% if not can_borrow %}
+<div class="alert alert-danger">
+  <strong>Quyền mượn/đọc đang bị ngắt.</strong> Trạng thái tài khoản: {{ account_status }}. Liên hệ thư viện để được hỗ trợ.
+</div>
+{% endif %}
+
+
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card stat-card p-3">
+      <div class="text-muted small">Đang mượn</div>
+      <div class="fs-3 fw-bold">{{ active_loans|length }}</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card stat-card p-3">
+      <div class="text-muted small">Chờ duyệt</div>
+      <div class="fs-3 fw-bold">{{ pending|length }}</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card stat-card p-3">
+      <div class="text-muted small">Sách yêu thích</div>
+      <div class="fs-3 fw-bold text-danger"><i class="fas fa-heart"></i> {{ favorite_books|length }}</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card stat-card p-3">
+      <div class="text-muted small">Phạt chưa trả</div>
+      <div class="fs-3 fw-bold text-danger">{{ unpaid_fines|length }}</div>
+    </div>
+  </div>
+</div>
+
+{% if unpaid_fines %}
+<div class="alert alert-warning">
+  <i class="fas fa-exclamation-triangle"></i>
+  Bạn còn <strong>{{ unpaid_fines|length }}</strong> khoản phạt chưa thanh toán.
+  Tổng: <strong>{{ unpaid_fines|sum(attribute='amount')|int }} VND</strong>.
+  Không thể mượn sách mới cho đến khi thanh toán.
+</div>
+{% endif %}
+
+{% if pending %}
+<h5 class="mt-4 fw-bold"><i class="fas fa-hourglass-half text-warning me-2"></i>Yêu cầu chờ duyệt</h5>
+<div class="table-responsive">
+  <table class="table table-sm bg-white align-middle">
+    <thead>
+      <tr>
+        <th>Sách</th>
+        <th>Ngày yêu cầu</th>
+        <th>Trạng thái</th>
+        <th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for l in pending %}
+      <tr>
+        <td class="fw-semibold">{{ l.book.title }}</td>
+        <td>{{ l.request_date.strftime('%d/%m/%Y %H:%M') }}</td>
+        <td><span class="badge bg-warning text-dark">{{ l.status }}</span></td>
+        <td>
+          <a href="{{ url_for('read_book', book_id=l.book.id) }}" class="btn btn-sm btn-success">
+            <i class="fas fa-book-open"></i> Đọc trực tuyến
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+{% if active_loans %}
+<h5 class="mt-4 fw-bold"><i class="fas fa-book-reader text-primary me-2"></i>Sách đang mượn</h5>
+<div class="table-responsive">
+  <table class="table table-sm bg-white align-middle">
+    <thead>
+      <tr>
+        <th>Sách</th>
+        <th>Hạn trả</th>
+        <th>Lần gia hạn</th>
+        <th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for l in active_loans %}
+      <tr class="{{ 'table-danger' if l.is_overdue() else '' }}">
+        <td class="fw-semibold">{{ l.book.title }}</td>
+        <td>
+          {{ l.due_date.strftime('%d/%m/%Y') if l.due_date else '—' }}
+          {% if l.is_overdue() %}
+            <span class="badge bg-danger ms-1">Quá hạn {{ l.days_overdue() }} ngày</span>
+          {% else %}
+            <span class="badge bg-success ms-1">Đúng hạn</span>
+          {% endif %}
+        </td>
+        <td>{{ l.renew_count }}/{{ l.max_renewals }}</td>
+        <td class="d-flex gap-2">
+          <a href="{{ url_for('read_book', book_id=l.book.id) }}" class="btn btn-sm btn-success">
+            <i class="fas fa-book-open"></i> Đọc trực tuyến
+          </a>
+
+          {% if l.can_renew() %}
+          <form method="post" action="{{ url_for('renew_loan', loan_id=l.id) }}" class="d-inline">
+            <button type="submit" class="btn btn-sm btn-outline-primary" title="Gia hạn / mượn lại đúng hạn">
+              <i class="fas fa-redo"></i> Gia hạn / Mượn lại
+            </button>
+          </form>
+          {% elif l.is_overdue() %}
+            <span class="badge bg-danger p-2">Quá hạn (Không thể gia hạn)</span>
+          {% else %}
+            <span class="text-muted small">Đã đạt giới hạn gia hạn</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+<!-- Favorite Books Section -->
+<h5 class="mt-4 fw-bold"><i class="fas fa-heart text-danger me-2"></i>Danh sách sách yêu thích</h5>
+{% if favorite_books %}
+<div class="row row-cols-1 row-cols-md-3 g-3">
+  {% for book in favorite_books %}
+  <div class="col">
+    <div class="card h-100 shadow-sm border-0">
+      <div class="card-body d-flex flex-column justify-content-between">
+        <div>
+          <h6 class="card-title fw-bold text-primary mb-1">{{ book.title }}</h6>
+          <p class="card-subtitle text-muted small mb-2">Tác giả: {{ book.author }}</p>
+          <p class="card-text small mb-2">Chủ đề: {{ book.subject or 'Tổng hợp' }} | ISBN: {{ book.isbn }}</p>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+          <a href="{{ url_for('read_book', book_id=book.id) }}" class="btn btn-sm btn-success">
+            <i class="fas fa-book-open"></i> Đọc ngay
+          </a>
+          <form method="post" action="{{ url_for('toggle_favorite', book_id=book.id) }}">
+            <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa khỏi yêu thích">
+              <i class="fas fa-trash"></i> Bỏ thích
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card p-3 text-muted">
+  Bạn chưa có cuốn sách nào trong danh sách yêu thích. Nhấn biểu tượng <i class="fas fa-heart text-danger"></i> ở trang chi tiết hoặc tìm kiếm sách để thêm!
+</div>
+{% endif %}
+
+<div class="mt-4">
+  <a href="{{ url_for('search') }}" class="btn btn-primary me-2"><i class="fas fa-search"></i> Tìm kiếm sách</a>
+  <a href="{{ url_for('my_loans') }}" class="btn btn-outline-secondary"><i class="fas fa-history"></i> Xem lịch sử & phạt</a>
+</div>
+{% endblock %}

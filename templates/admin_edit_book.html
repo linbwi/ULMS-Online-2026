@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Sửa sách{% endblock %}
+{% block content %}
+<h2 class="mb-3">Sửa sách: {{ book.title }}</h2>
+<form method="post" class="card p-4" style="max-width:560px">
+  <div class="mb-3">
+    <label class="form-label">ISBN *</label>
+    <input name="isbn" class="form-control" value="{{ book.isbn }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Tiêu đề *</label>
+    <input name="title" class="form-control" value="{{ book.title }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Tác giả *</label>
+    <input name="author" class="form-control" value="{{ book.author }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Chủ đề</label>
+    <input name="subject" class="form-control" value="{{ book.subject or '' }}">
+  </div>
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <label class="form-label">Năm XB</label>
+      <input name="year" type="number" class="form-control" value="{{ book.year or '' }}">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label class="form-label">Tổng số bản</label>
+      <input name="copies" type="number" class="form-control" value="{{ book.total_copies }}" min="1">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label class="form-label">Thời hạn mượn (ngày)</label>
+      <input name="loan_days" type="number" class="form-control" value="{{ book.loan_days or 14 }}" min="1">
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Trạng thái kho</label>
+    <select name="status" class="form-select">
+      <option value="Available" {{ 'selected' if book.status=='Available' }}>Available (Sẵn sàng)</option>
+      <option value="Hidden" {{ 'selected' if book.status=='Hidden' }}>Hidden (Ẩn)</option>
+      <option value="NoCopyright" {{ 'selected' if book.status=='NoCopyright' }}>NoCopyright (Hết bản quyền)</option>
+      <option value="Archived" {{ 'selected' if book.status=='Archived' }}>Archived (Lưu trữ)</option>
+    </select>
+  </div>
+  <div class="mb-3 form-check">
+    <input type="checkbox" name="has_digital_file" class="form-check-input" id="hdf" {{ 'checked' if book.has_digital_file }}>
+    <label class="form-check-label" for="hdf">Có file nội dung số</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Lưu</button>
+  <a href="{{ url_for('admin_books') }}" class="btn btn-link">Hủy</a>
+</form>
+{% endblock %}

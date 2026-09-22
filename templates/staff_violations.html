@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Quản lý vi phạm bản quyền{% endblock %}
+{% block content %}
+<h2 class="mb-3"><i class="bi bi-shield-exclamation"></i> Quản lý vi phạm bản quyền</h2>
+<p class="text-muted">Xem, xử lý, ghi chú và ban theo mức độ vi phạm.</p>
+
+<form class="mb-3 d-flex gap-2" method="get">
+  <select name="status" class="form-select form-select-sm" style="width:auto">
+    <option value="">Tất cả</option>
+    <option value="Open" {{ 'selected' if status_filter=='Open' }}>Open</option>
+    <option value="Warned" {{ 'selected' if status_filter=='Warned' }}>Warned</option>
+    <option value="AccessRevoked" {{ 'selected' if status_filter=='AccessRevoked' }}>AccessRevoked</option>
+    <option value="Banned" {{ 'selected' if status_filter=='Banned' }}>Banned</option>
+    <option value="Closed" {{ 'selected' if status_filter=='Closed' }}>Closed</option>
+  </select>
+  <button class="btn btn-sm btn-primary">Lọc</button>
+</form>
+
+<div class="table-responsive">
+  <table class="table table-hover bg-white">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>User</th>
+        <th>Loại</th>
+        <th>Mô tả</th>
+        <th>Mức</th>
+        <th>Trạng thái</th>
+        <th>Thời gian</th>
+        <th>Xử lý</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in violations %}
+      <tr>
+        <td>{{ v.id }}</td>
+        <td>
+          <a href="{{ url_for('staff_user_detail', user_id=v.user_id) }}">{{ v.member.full_name }}</a>
+          <br><small class="text-muted">{{ v.member.university_id }}</small>
+        </td>
+        <td>{{ v.violation_type }}</td>
+        <td style="max-width:220px">{{ v.description[:100] }}{% if v.description and v.description|length > 100 %}...{% endif %}</td>
+        <td><span class="badge bg-{{ 'danger' if v.severity >= 3 else ('warning' if v.severity == 2 else 'info') }}">{{ v.severity }}</span></td>
+        <td>{{ v.status }}</td>
+        <td>{{ v.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+        <td>
+          {% if v.status in ['Open', 'Warned'] %}
+          <form method="post" action="{{ url_for('handle_violation', vid=v.id) }}" class="d-flex flex-column gap-1">
+            <input type="text" name="note" class="form-control form-control-sm" placeholder="Ghi chú">
+            <div class="btn-group btn-group-sm">
+              <button name="action" value="warn" class="btn btn-outline-secondary">Cảnh báo</button>
+              <button name="action" value="revoke_borrow" class="btn btn-outline-warning">Ngắt quyền</button>
+              <button name="action" value="ban_temp" class="btn btn-outline-danger">Ban 5 ngày</button>
+              <input type="hidden" name="days" value="5">
+              <button name="action" value="ban_perm" class="btn btn-danger">Ban vĩnh viễn</button>
+            </div>
+          </form>
+          {% else %}
+          <small>{{ v.action_taken or '—' }}</small>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" class="text-muted">Không có vi phạm.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Cấu hình hệ thống{% endblock %}
+{% block content %}
+<h2 class="mb-3"><i class="bi bi-gear"></i> Cấu hình hệ thống</h2>
+<p class="text-muted">Giới hạn số sách/user, thời hạn mượn mặc định, bắt buộc staff duyệt, mức phạt…</p>
+
+<form method="post" class="card p-4" style="max-width:520px">
+  <div class="mb-3">
+    <label class="form-label">Giới hạn số sách đang mượn / user (5–8)</label>
+    <input type="number" name="max_loans" class="form-control" value="{{ cfg.max_loans }}" min="1" max="20">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Thời hạn mượn mặc định (ngày)</label>
+    <input type="number" name="default_loan_days" class="form-control" value="{{ cfg.default_loan_days }}" min="1" max="90">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Mức phạt (VND / ngày quá hạn)</label>
+    <input type="number" name="fine_per_day" class="form-control" value="{{ cfg.fine_per_day }}" min="0">
+  </div>
+  <div class="mb-3 form-check">
+    <input type="checkbox" name="require_staff_approval" class="form-check-input" id="req" {{ 'checked' if cfg.require_staff_approval }}>
+    <label class="form-check-label" for="req">Bắt buộc Staff duyệt yêu cầu đọc (Pending Approval)</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Lưu cấu hình</button>
+</form>
+{% endblock %}

@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block title %}Thủ thư - Circulation{% endblock %}
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-inbox"></i> Circulation — Xử lý yêu cầu / quyền đọc số</h2>
+
+<ul class="nav nav-tabs mb-3">
+  <li class="nav-item">
+    <a class="nav-link active" data-bs-toggle="tab" href="#pending">Chờ duyệt ({{ pending_loans|length }})</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#active">Đang có quyền ({{ active_loans|length }})</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#ready">Đặt giữ sẵn sàng ({{ ready_res|length }})</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-bs-toggle="tab" href="#violations">Vi phạm mở ({{ open_violations|length }})</a>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane fade show active" id="pending">
+    {% if pending_loans %}
+    <div class="table-responsive">
+      <table class="table table-hover bg-white">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Thành viên</th>
+            <th>Sách</th>
+            <th>Yêu cầu lúc</th>
+            <th>Trạng thái</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for l in pending_loans %}
+          <tr>
+            <td>{{ l.id }}</td>
+            <td>
+              <a href="{{ url_for('staff_user_detail', user_id=l.member_id) }}">{{ l.member.full_name }}</a>
+              <br><small class="text-muted">{{ l.member.university_id }}</small>
+            </td>
+            <td>{{ l.book.title }}</td>
+            <td>{{ l.request_date.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td><span class="badge bg-warning text-dark">{{ l.status }}</span></td>
+            <td class="text-nowrap">
+              <form method="post" action="{{ url_for('approve_access', loan_id=l.id) }}" class="d-inline">
+                <button class="btn btn-sm btn-success">Duyệt</button>
+              </form>
+              <form method="post" action="{{ url_for('reject_access', loan_id=l.id) }}" class="d-inline">
+                <input type="hidden" name="reason" value="Từ chối bởi thủ thư">
+                <button class="btn btn-sm btn-outline-danger">Từ chối</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted">Không có yêu cầu chờ duyệt.</p>
+    {% endif %}
+  </div>
+
+  <div class="tab-pane fade" id="active">
+    {% if active_loans %}
+    <div class="table-responsive">
+      <table class="table table-hover bg-white">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Thành viên</th>
+            <th>Sách</th>
+            <th>Hạn đọc</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for l in active_loans %}
+          <tr class="{{ 'table-danger' if l.is_overdue() else '' }}">
+            <td>{{ l.id }}</td>
+            <td>
+              <a href="{{ url_for('staff_user_detail', user_id=l.member_id) }}">{{ l.member.full_name }}</a>
+            </td>
+            <td>{{ l.book.title }}</td>
+            <td>
+              {{ l.due_date.strftime('%d/%m/%Y') if l.due_date else '—' }}
+              {% if l.is_overdue() %}
+              <span class="badge bg-danger">Quá hạn {{ l.days_overdue() }} ngày</span>
+              {% endif %}
+            </td>
+            <td class="text-nowrap">
+              <form method="post" action="{{ url_for('process_return', loan_id=l.id) }}" class="d-inline">
+                <button class="btn btn-sm btn-primary">Kết thúc quyền</button>
+              </form>
+              <form method="post" action="{{ url_for('revoke_access', loan_id=l.id) }}" class="d-inline"
+                    onsubmit="return confirm('Thu hồi quyền đọc?')">
+                <input type="hidden" name="reason" value="Thu hồi bởi thủ thư">
+                <button class="btn btn-sm btn-outline-warning">Thu hồi</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted">Không có quyền đọc đang Active.</p>
+    {% endif %}
+  </div>
+
+  <div class="tab-pane fade" id="ready">
+    {% if ready_res %}
+    <div class="table-responsive">
+      <table class="table table-hover bg-white">
+        <thead class="table-light">
+          <tr>
+            <th>Thành viên</th>
+            <th>Sách</th>
+            <th>Thông báo lúc</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in ready_res %}
+          <tr>
+            <td>{{ r.member.full_name }}</td>
+            <td>{{ r.book.title }}</td>
+            <td>{{ r.notified_at.strftime('%d/%m/%Y %H:%M') if r.notified_at else '—' }}</td>
+            <td>
+              <form method="post" action="{{ url_for('fulfill_reservation', res_id=r.id) }}">
+                <button class="btn btn-sm btn-success">Cấp quyền đọc</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted">Không có đặt giữ sẵn sàng.</p>
+    {% endif %}
+  </div>
+
+  <div class="tab-pane fade" id="violations">
+    <p><a href="{{ url_for('staff_violations') }}" class="btn btn-sm btn-outline-primary">Xem tất cả vi phạm</a></p>
+    {% if open_violations %}
+    <div class="table-responsive">
+      <table class="table table-sm table-hover bg-white">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>User</th>
+            <th>Loại</th>
+            <th>Mức độ</th>
+            <th>Thời gian</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for v in open_violations %}
+          <tr>
+            <td>{{ v.id }}</td>
+            <td><a href="{{ url_for('staff_user_detail', user_id=v.user_id) }}">{{ v.member.full_name }}</a></td>
+            <td>{{ v.violation_type }}</td>
+            <td><span class="badge bg-{{ 'danger' if v.severity >= 3 else 'warning' }}">{{ v.severity }}</span></td>
+            <td>{{ v.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>{{ v.status }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted">Không có vi phạm đang mở.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

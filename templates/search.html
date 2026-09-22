@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Tìm kiếm catalogue{% endblock %}
+{% block content %}
+<h2 class="mb-3"><i class="bi bi-search"></i> Tìm kiếm catalogue</h2>
+<form class="row g-2 mb-4" method="get">
+  <div class="col-md-5">
+    <input type="text" name="q" class="form-control" placeholder="Tiêu đề, tác giả, ISBN, chủ đề..." value="{{ q }}">
+  </div>
+  <div class="col-md-3">
+    <input type="text" name="subject" class="form-control" placeholder="Chủ đề" value="{{ subject }}">
+  </div>
+  <div class="col-md-2">
+    <input type="number" name="year" class="form-control" placeholder="Năm" value="{{ year }}">
+  </div>
+  <div class="col-md-2">
+    <button type="submit" class="btn btn-primary w-100">Tìm</button>
+  </div>
+</form>
+
+{% if books %}
+<p class="text-muted">Tìm thấy <strong>{{ books|length }}</strong> kết quả</p>
+<div class="table-responsive">
+  <table class="table table-hover bg-white rounded">
+    <thead class="table-light">
+      <tr>
+        <th>ISBN</th>
+        <th>Tiêu đề</th>
+        <th>Tác giả</th>
+        <th>Chủ đề</th>
+        <th>Năm</th>
+        <th>Tình trạng</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for b in books %}
+      <tr>
+        <td><code>{{ b.isbn }}</code></td>
+        <td><a href="{{ url_for('book_detail', book_id=b.id) }}">{{ b.title }}</a></td>
+        <td>{{ b.author }}</td>
+        <td>{{ b.subject or '—' }}</td>
+        <td>{{ b.year or '—' }}</td>
+        <td>
+          {% if b.available_copies > 0 %}
+          <span class="badge badge-available">{{ b.available_copies }}/{{ b.total_copies }} Sẵn sàng</span>
+          {% else %}
+          <span class="badge bg-secondary">Hết bản giấy</span>
+          {% endif %}
+        </td>
+        <td class="d-flex gap-1 justify-content-end">
+          <a href="{{ url_for('read_book', book_id=b.id) }}" class="btn btn-sm btn-success" title="Đọc sách trực tuyến">
+            <i class="fas fa-book-open"></i> Đọc
+          </a>
+          <a href="{{ url_for('book_detail', book_id=b.id) }}" class="btn btn-sm btn-outline-primary">Chi tiết</a>
+          {% if current_user.is_authenticated %}
+          <form method="post" action="{{ url_for('toggle_favorite', book_id=b.id) }}" class="d-inline">
+            <button type="submit" class="btn btn-sm {% if b.id in user_fav_ids %}btn-danger{% else %}btn-outline-danger{% endif %}" title="Yêu thích">
+              <i class="fas fa-heart"></i>
+            </button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+  {% if q or subject or year %}
+  Không tìm thấy kết quả. Thử từ khóa khác hoặc xem tất cả sách.
+  {% else %}
+  Nhập từ khóa để tìm kiếm hoặc để trống và nhấn Tìm để xem toàn bộ catalogue.
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

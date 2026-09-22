@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-speedometer2"></i> Admin Dashboard</h2>
+<div class="row g-3 mb-4">
+  <div class="col-md-2"><div class="card stat-card p-3"><div class="text-muted small">Người dùng</div><div class="fs-4 fw-bold">{{ stats.users }}</div></div></div>
+  <div class="col-md-2"><div class="card stat-card p-3"><div class="text-muted small">Sách</div><div class="fs-4 fw-bold">{{ stats.books }}</div></div></div>
+  <div class="col-md-2"><div class="card stat-card p-3"><div class="text-muted small">Đang đọc</div><div class="fs-4 fw-bold">{{ stats.active_loans }}</div></div></div>
+  <div class="col-md-2"><div class="card stat-card p-3"><div class="text-muted small">Chờ duyệt</div><div class="fs-4 fw-bold">{{ stats.pending }}</div></div></div>
+  <div class="col-md-2"><div class="card stat-card p-3"><div class="text-muted small">Phạt chưa TT</div><div class="fs-4 fw-bold">{{ stats.unpaid_fines }}</div></div></div>
+  <div class="col-md-2"><div class="card stat-card p-3"><div class="text-muted small">Vi phạm mở</div><div class="fs-4 fw-bold text-danger">{{ stats.open_violations }}</div></div></div>
+</div>
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="list-group">
+      <a href="{{ url_for('admin_books') }}" class="list-group-item list-group-item-action">Quản lý kho sách</a>
+      <a href="{{ url_for('admin_users') }}" class="list-group-item list-group-item-action">Quản lý tài khoản</a>
+      <a href="{{ url_for('admin_config') }}" class="list-group-item list-group-item-action">Cấu hình hệ thống</a>
+      <a href="{{ url_for('staff_violations') }}" class="list-group-item list-group-item-action">Vi phạm bản quyền</a>
+      <a href="{{ url_for('admin_reports') }}" class="list-group-item list-group-item-action">Báo cáo & thống kê</a>
+      <a href="{{ url_for('admin_audit') }}" class="list-group-item list-group-item-action">Nhật ký audit</a>
+      <a href="{{ url_for('staff_dashboard') }}" class="list-group-item list-group-item-action">Circulation</a>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">Nhật ký gần đây</div>
+      <div class="card-body p-0">
+        <table class="table table-sm mb-0">
+          <thead><tr><th>Thời gian</th><th>User</th><th>Hành động</th><th>Chi tiết</th></tr></thead>
+          <tbody>
+            {% for log in recent_logs %}
+            <tr>
+              <td>{{ log.created_at.strftime('%d/%m %H:%M') }}</td>
+              <td>{{ log.user.full_name if log.user else '—' }}</td>
+              <td>{{ log.action }}</td>
+              <td>{{ log.details[:60] if log.details else '' }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" class="text-muted">Trống</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

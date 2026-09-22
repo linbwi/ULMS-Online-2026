@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ book.title }}{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{ url_for('search') }}">Catalogue</a></li>
+    <li class="breadcrumb-item active">{{ book.title }}</li>
+  </ol>
+</nav>
+
+<div class="card p-4">
+  <div class="row">
+    <div class="col-md-8">
+      <h2>{{ book.title }}</h2>
+      <p class="text-muted mb-1">Tác giả: <strong>{{ book.author }}</strong></p>
+      <p class="mb-1">ISBN: <code>{{ book.isbn }}</code></p>
+      <p class="mb-1">Chủ đề: {{ book.subject or '—' }}</p>
+      <p class="mb-1">Năm xuất bản: {{ book.year or '—' }}</p>
+      <p class="mb-1">Thời hạn mượn: <strong>{{ book.loan_days or 14 }} ngày</strong></p>
+      <p>
+        Tình trạng:
+        <span class="badge bg-{{ 'success' if book.status=='Available' else 'secondary' }}">
+          {{ book.display_status }}
+        </span>
+        {% if book.status == 'Available' %}
+        <span class="badge bg-info text-dark">{{ book.available_copies }}/{{ book.total_copies }} bản quyền số</span>
+        {% endif %}
+      </p>
+      {% if max_loans is defined %}
+      <p class="small text-muted">Giới hạn hệ thống: tối đa {{ max_loans }} sách/tài khoản.</p>
+      {% endif %}
+    </div>
+    <div class="col-md-4 text-end d-flex flex-column align-items-end gap-2">
+      {% if current_user.is_authenticated %}
+        {% if current_user.role == 'member' %}
+          <form method="post" action="{{ url_for('request_access', book_id=book.id) }}" class="w-100">
+            <button type="submit" class="btn btn-primary w-100" {{ 'disabled' if book.status != 'Available' }}>
+              <i class="bi bi-key"></i> Yêu cầu quyền đọc
+            </button>
+          </form>
+        {% endif %}
+        <a href="{{ url_for('read_book', book_id=book.id) }}" class="btn btn-success w-100">
+          <i class="bi bi-book"></i> Đọc trực tuyến
+        </a>
+        <form method="post" action="{{ url_for('toggle_favorite', book_id=book.id) }}" class="w-100">
+          <button type="submit" class="btn {% if book.id in user_fav_ids %}btn-danger{% else %}btn-outline-danger{% endif %} w-100">
+            <i class="bi bi-heart"></i> {% if book.id in user_fav_ids %}Đã yêu thích{% else %}Yêu thích{% endif %}
+          </button>
+        </form>
+      {% else %}
+        <a href="{{ url_for('login') }}" class="btn btn-outline-primary">Đăng nhập để đọc & mượn</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

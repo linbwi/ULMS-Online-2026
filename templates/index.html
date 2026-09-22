@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Trang chủ{% endblock %}
+{% block content %}
+<div class="row align-items-center mb-5">
+  <div class="col-lg-7">
+    <h1 class="display-5 fw-bold text-primary">Thư viện Đại học — Online</h1>
+    <p class="lead text-muted">
+      Hệ thống quản lý thư viện web cho phép sinh viên và cán bộ tìm kiếm catalogue,
+      yêu cầu mượn, đặt giữ, gia hạn và theo dõi phí phạt trực tuyến.
+    </p>
+    <div class="d-flex gap-2 flex-wrap">
+      <a href="{{ url_for('search') }}" class="btn btn-primary btn-lg">
+        <i class="bi bi-search"></i> Tìm sách ngay
+      </a>
+      {% if not current_user.is_authenticated %}
+      <a href="{{ url_for('register') }}" class="btn btn-outline-primary btn-lg">Đăng ký tài khoản</a>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-lg-5 text-center d-none d-lg-block">
+    <i class="bi bi-bookshelf" style="font-size: 8rem; color: #2b6cb0; opacity: .3;"></i>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-4">
+    <div class="card h-100 p-3">
+      <div class="card-body">
+        <h5><i class="bi bi-search text-primary"></i> Tìm kiếm catalogue</h5>
+        <p class="text-muted small">Tìm theo tiêu đề, tác giả, ISBN, chủ đề hoặc năm xuất bản. Xem tình trạng sẵn có
+          theo thời gian thực.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 p-3">
+      <div class="card-body">
+        <h5><i class="bi bi-bookmark-plus text-primary"></i> Mượn & Đặt giữ online</h5>
+        <p class="text-muted small">Yêu cầu mượn sách có sẵn hoặc đặt giữ sách đang được mượn. Nhận thông báo khi sách
+          sẵn sàng.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 p-3">
+      <div class="card-body">
+        <h5><i class="bi bi-arrow-repeat text-primary"></i> Gia hạn & Theo dõi phạt</h5>
+        <p class="text-muted small">Gia hạn sách đủ điều kiện trực tuyến. Xem lịch sử mượn và phí phạt quá hạn trên tài
+          khoản cá nhân.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if not current_user.is_authenticated %}
+<div class="card bg-light border-0 p-4">
+  <h5>Tài khoản demo</h5>
+  <div class="row small">
+    <div class="col-md-4">
+      <strong>Sinh viên:</strong><br>
+      Email: <code>an.nguyen@student.university.edu.vn</code><br>
+      Mật khẩu: <code>student123</code>
+    </div>
+    <div class="col-md-4">
+      <strong>Staff (Circulation):</strong><br>
+      Email: <code>lan@lib.university.edu.vn</code><br>
+      Mật khẩu: <code>staff123</code>
+    </div>
+    <div class="col-md-4">
+      <strong>Admin:</strong><br>
+      Email: <code>admin@lib.university.edu.vn</code><br>
+      Mật khẩu: <code>admin123</code>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

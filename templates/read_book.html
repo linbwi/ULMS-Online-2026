@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+{% block title %}Đọc sách trực tuyến: {{ book.title }} - ULMS{% endblock %}
+
+{% block content %}
+<style>
+  /* Strict DRM anti-copy and protection styles */
+  .drm-reader-container {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--reader-bg, #ffffff);
+    color: var(--reader-text, #212529);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    min-height: 500px;
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+
+  /* Watermark overlay across reader */
+  .drm-watermark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0.12;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: space-around;
+    justify-content: space-around;
+    overflow: hidden;
+  }
+  .watermark-item {
+    transform: rotate(-25deg);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #000;
+    white-space: nowrap;
+    margin: 30px;
+    letter-spacing: 1px;
+  }
+
+  /* Themes */
+  .theme-light { --reader-bg: #ffffff; --reader-text: #212529; }
+  .theme-dark { --reader-bg: #1a1d20; --reader-text: #e9ecef; }
+  .theme-sepia { --reader-bg: #fbf0d9; --reader-text: #5f4b32; }
+
+  /* Print Protection */
+  @media print {
+    body * {
+      display: none !important;
+    }
+    body::after {
+      content: "IN ẤN TÀI LIỆU NÀY BỊ CẤM BỞI BẢN QUYỀN THƯ VIỆN SỐ ULMS.";
+      display: block !important;
+      font-size: 24pt;
+      color: red;
+      text-align: center;
+      margin-top: 100px;
+    }
+  }
+</style>
+
+<div class="container my-4">
+  <!-- Reader Header Toolbar -->
+  <div class="card mb-3 border-0 shadow-sm">
+    <div class="card-body d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <div>
+        <a href="{{ url_for('book_detail', book_id=book.id) }}" class="btn btn-outline-secondary btn-sm me-2">
+          <i class="fas fa-arrow-left"></i> Chi tiết sách
+        </a>
+        <span class="badge bg-danger">
+          <i class="fas fa-shield-alt"></i> Đọc An Toàn DRM
+        </span>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <span class="text-muted small">Cỡ chữ:</span>
+        <button class="btn btn-sm btn-outline-secondary" onclick="changeFontSize(-1)">A-</button>
+        <button class="btn btn-sm btn-outline-secondary" onclick="changeFontSize(1)">A+</button>
+
+        <span class="text-muted small ms-2">Giao diện:</span>
+        <button class="btn btn-sm btn-outline-dark" onclick="setTheme('light')">Sáng</button>
+        <button class="btn btn-sm btn-outline-secondary" onclick="setTheme('sepia')" style="background:#fbf0d9; color:#5f4b32;">Sepia</button>
+        <button class="btn btn-sm btn-dark" onclick="setTheme('dark')">Tối</button>
+
+        <form action="{{ url_for('toggle_favorite', book_id=book.id) }}" method="POST" class="d-inline ms-2">
+          <button type="submit" class="btn btn-sm {% if book.id in user_fav_ids %}btn-danger{% else %}btn-outline-danger{% endif %}">
+            <i class="fas fa-heart"></i> {% if book.id in user_fav_ids %}Đã Yêu thích{% else %}Yêu thích{% endif %}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Book Header Info -->
+  <div class="mb-3">
+    <h3 class="fw-bold mb-1"><i class="fas fa-book-open text-primary me-2"></i>{{ book.title }}</h3>
+    <p class="text-muted mb-0">Tác giả: <strong>{{ book.author }}</strong> | Chủ đề: <span>{{ book.subject or "Tổng hợp" }}</span> | ISBN: <code>{{ book.isbn }}</code></p>
+  </div>
+
+  <!-- DRM Notice Banner -->
+  <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center mb-3" role="alert">
+    <i class="fas fa-exclamation-triangle fa-lg me-3 text-warning"></i>
+    <div>
+      <strong>Lưu ý bảo mật:</strong> Hệ thống đã khóa tính năng Tải về, In ấn, Sao chép văn bản và Chụp màn hình để bảo vệ bản quyền sách. Mọi hành vi vi phạm sẽ bị ghi nhận vào nhật ký an ninh của tài khoản <strong>{{ current_user.email }}</strong>.
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+  <!-- Reader Body Container -->
+  <div id="reader-box" class="drm-reader-container theme-light">
+    <!-- Dynamic Security Watermark -->
+    <div class="drm-watermark-overlay">
+      {% for i in range(12) %}
+        <div class="watermark-item">
+          ULMS DRM • {{ current_user.full_name }} • {{ current_user.university_id }} • {{ current_user.email }}
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Chapter Contents -->
+    <div id="reader-content" style="position: relative; z-index: 1;">
+      {% for ch in chapters %}
+        <div class="chapter-block mb-5">
+          <h4 class="fw-bold border-bottom pb-2 mb-3 text-primary">{{ ch.chapter }}</h4>
+          {% for para in ch.content.split('\n\n') %}
+            <p class="mb-3">{{ para }}</p>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentFontSize = 1.1;
+
+  function changeFontSize(delta) {
+    currentFontSize = Math.max(0.85, Math.min(1.6, currentFontSize + delta * 0.1));
+    document.getElementById('reader-box').style.fontSize = currentFontSize + 'rem';
+  }
+
+  function setTheme(theme) {
+    const box = document.getElementById('reader-box');
+    box.className = 'drm-reader-container theme-' + theme;
+  }
+
+  let violationAttempts = 0;
+  function triggerViolation(reason) {
+    violationAttempts++;
+    if (violationAttempts >= 3) {
+      const formData = new URLSearchParams();
+      formData.append('reason', reason);
+      fetch("{{ url_for('report_violation') }}", {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: formData
+      }).then(res => res.json()).then(data => {
+        alert('Tài khoản của bạn đã bị KHÓA tự động do vi phạm quy định an toàn bảo mật DRM quá 3 lần!');
+        if (data.redirect) {
+          window.location.href = data.redirect;
+        }
+      });
+    }
+  }
+
+  // --- Strict Anti-Copy & Anti-Export Protections ---
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    triggerViolation('Cố ý mở Menu chuột phải để trích xuất dữ liệu');
+    alert('Thao tác chuột phải bị cấm trên giao diện Đọc sách bảo mật ULMS DRM.');
+    return false;
+  });
+
+  document.addEventListener('selectstart', function(e) {
+    e.preventDefault();
+    return false;
+  });
+
+  document.addEventListener('copy', function(e) {
+    e.preventDefault();
+    triggerViolation('Cố ý sao chép văn bản (Ctrl+C / Copy)');
+    alert('Tính năng sao chép bị vô hiệu hóa.');
+    return false;
+  });
+
+  document.addEventListener('cut', function(e) {
+    e.preventDefault();
+    return false;
+  });
+
+  document.addEventListener('dragstart', function(e) {
+    e.preventDefault();
+    return false;
+  });
+
+  document.addEventListener('keydown', function(e) {
+    // Block Ctrl+C, Ctrl+X, Ctrl+S, Ctrl+P, Ctrl+U, F12, Ctrl+Shift+I/J/C, PrintScreen
+    if (
+      (e.ctrlKey && ['c', 'x', 's', 'p', 'u', 'a'].includes(e.key.toLowerCase())) ||
+      e.key === 'F12' ||
+      e.key === 'PrintScreen' ||
+      (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase()))
+    ) {
+      e.preventDefault();
+      triggerViolation('Cố ý bấm phím tắt cấm (' + (e.ctrlKey ? 'Ctrl+' : '') + e.key.toUpperCase() + ')');
+      alert('Phím tắt (' + (e.ctrlKey ? 'Ctrl+' : '') + e.key.toUpperCase() + ') đã bị chặn để bảo vệ bản quyền tài liệu.');
+      return false;
+    }
+  });
+
+  // Anti-Screenshot / Blur on focus loss
+  window.addEventListener('blur', function() {
+    document.getElementById('reader-content').style.filter = 'blur(12px)';
+  });
+  window.addEventListener('focus', function() {
+    document.getElementById('reader-content').style.filter = 'none';
+  });
+</script>
+{% endblock %}
