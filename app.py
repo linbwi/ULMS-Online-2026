@@ -88,14 +88,14 @@ def register():
         confirm = request.form.get("confirm_password", "")
 
         if not all([university_id, email, full_name, password]):
-        flash("Vui lòng điền đầy đủ thông tin.", "danger")
-        return render_template("register.html")
+            flash("Vui lòng điền đầy đủ thông tin.", "danger")
+            return render_template("register.html")
 
         name_parts = full_name.split()
 
         if len(name_parts) < 2:
-        flash("Họ và tên phải bao gồm đầy đủ họ và tên.", "danger")
-        return render_template("register.html")
+            flash("Họ và tên phải bao gồm đầy đủ họ và tên.", "danger")
+            return render_template("register.html")
         if password != confirm:
             flash("Mật khẩu xác nhận không khớp.", "danger")
             return render_template("register.html")
