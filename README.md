@@ -50,15 +50,6 @@ Generated files in `case-study-srs/output/`:
 
 The report generator reads the workbook each time it runs. Review its outputs and resolve validation findings before submission. Automated validation uses heuristics; it does not establish that requirements are correct or approved.
 
-## Current workbook findings to review
-
-The automated check currently reports:
-- `REQ-10` depends on `REQ-14`, which is not present in the requirements list.
-- `REQ-12` depends on itself.
-- `REQ-13` contains potentially vague wording and needs a measurable acceptance criterion.
-
-These are review findings, not automatically corrected data. Confirm the intended requirement relationships with your team before editing the workbook.
-
 ## Project layout
 
 - `app.py`, `models.py`, `config.py`, `templates/`, `static/`: web application.
