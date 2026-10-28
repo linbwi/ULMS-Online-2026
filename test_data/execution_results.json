@@ -1,0 +1,267 @@
+{
+  "source_input": "test_data\\input.json",
+  "generated_at": "2026-10-22T23:24:13+07:00",
+  "summary": {
+    "total": 23,
+    "PASS": 23,
+    "FAIL": 0,
+    "ERROR": 0,
+    "NOT_AUTOMATED": 0
+  },
+  "results": [
+    {
+      "test_case_id": "TC-01",
+      "title": "Register and log in with valid university credentials",
+      "related_requirements": "REQ-01",
+      "expected_result": "Account is created/authenticated and a secure session is established.",
+      "pytest_node": "tests/test_app.py::test_registered_member_can_log_in_with_valid_credentials",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 4.894,
+      "details": ".                                                                        [100%]\n1 passed, 3 warnings in 1.40s\n"
+    },
+    {
+      "test_case_id": "TC-02",
+      "title": "Catalogue search returns results within 2 seconds",
+      "related_requirements": "REQ-02;NFR-01",
+      "expected_result": "Relevant results and availability are displayed; 95th-percentile response time is at most 2 seconds.",
+      "pytest_node": "tests/test_app.py::test_catalogue_search_returns_matching_results_within_two_seconds",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 2.749,
+      "details": ".                                                                        [100%]\n1 passed, 2 warnings in 0.48s\n"
+    },
+    {
+      "test_case_id": "TC-03",
+      "title": "User submits a digital access request",
+      "related_requirements": "REQ-03",
+      "expected_result": "Request is created as Pending Approval and appears for Admin review; User can view status.",
+      "pytest_node": "tests/test_app.py::test_access_request_is_pending_when_circulation_admin_approval_enabled",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 2.768,
+      "details": ".                                                                        [100%]\n1 passed, 7 warnings in 1.00s\n"
+    },
+    {
+      "test_case_id": "TC-04",
+      "title": "Eligible User renews a digital loan",
+      "related_requirements": "REQ-07",
+      "expected_result": "Due date is extended according to configured limits and the new due date is shown.",
+      "pytest_node": "tests/test_app.py::test_eligible_member_can_renew_active_loan",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 2.861,
+      "details": ".                                                                        [100%]\n1 passed, 7 warnings in 1.06s\n"
+    },
+    {
+      "test_case_id": "TC-05",
+      "title": "User cannot access Admin-only functions",
+      "related_requirements": "REQ-06",
+      "expected_result": "System denies access and does not disclose or modify Admin data.",
+      "pytest_node": "tests/test_app.py::test_member_cannot_open_admin_page",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 2.877,
+      "details": ".                                                                        [100%]\n1 passed, 4 warnings in 1.02s\n"
+    },
+    {
+      "test_case_id": "TC-06",
+      "title": "Expired digital access is revoked automatically",
+      "related_requirements": "REQ-10;REQ-12",
+      "expected_result": "The system detects that the digital loan has expired when the User attempts to access the book. Reading access is denied, the loan status is updated to the appropriate expired or revoked state, and the expiry event is recorded in the audit log.\n",
+      "pytest_node": "tests/test_app.py::test_expired_digital_access_is_revoked_on_next_read_attempt",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 3.127,
+      "details": ".                                                                        [100%]\n1 passed, 9 warnings in 0.88s\n"
+    },
+    {
+      "test_case_id": "TC-07",
+      "title": "User views loan history and fines",
+      "related_requirements": "REQ-08;REQ-04",
+      "expected_result": "Only the User's own accurate loan and fine records are displayed.",
+      "pytest_node": "tests/test_app.py::test_member_can_view_loan_history_fines_and_favourites",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 2.581,
+      "details": ".                                                                        [100%]\n1 passed, 8 warnings in 0.93s\n"
+    },
+    {
+      "test_case_id": "TC-08",
+      "title": "Audit log records authentication and access-control decisions",
+      "related_requirements": "REQ-05",
+      "expected_result": "Successful and failed authentication attempts, access-request decisions, loan renewal, and sanction changes are recorded with actor/system source, timestamp, event type, outcome, and relevant details. A normal User cannot view the audit log.",
+      "pytest_node": "tests/test_app.py::test_login_and_online_access_decisions_are_audited",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 3.028,
+      "details": ".                                                                        [100%]\n1 passed, 8 warnings in 1.08s\n"
+    },
+    {
+      "test_case_id": "TC-09",
+      "title": "User adds and removes a book from favourites",
+      "related_requirements": "REQ-09",
+      "expected_result": "Book appears after adding and no longer appears after removal; list is associated with the correct User.",
+      "pytest_node": "tests/test_app.py::test_member_can_add_and_remove_favorite",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 3.775,
+      "details": ".                                                                        [100%]\n1 passed, 9 warnings in 2.00s\n"
+    },
+    {
+      "test_case_id": "TC-10",
+      "title": "User reads a book with valid approved access",
+      "related_requirements": "REQ-10;REQ-12",
+      "expected_result": "Book content opens and can be read through the web interface while access remains valid.",
+      "pytest_node": "tests/test_app.py::test_member_with_active_loan_can_read_book",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 2.775,
+      "details": ".                                                                        [100%]\n1 passed, 8 warnings in 1.06s\n"
+    },
+    {
+      "test_case_id": "TC-11",
+      "title": "User without valid access is denied online reading",
+      "related_requirements": "REQ-10;REQ-12;REQ-06",
+      "expected_result": "System denies access and does not expose book content.",
+      "pytest_node": "tests/test_app.py::test_member_without_active_loan_is_redirected_from_reader",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 2.697,
+      "details": ".                                                                        [100%]\n1 passed, 5 warnings in 0.98s\n"
+    },
+    {
+      "test_case_id": "TC-12",
+      "title": "User requests access again to a previously borrowed book",
+      "related_requirements": "REQ-11;REQ-03",
+      "expected_result": "A new access request is created with a visible status after availability and account checks.",
+      "pytest_node": "tests/test_app.py::test_member_can_request_access_again_after_previous_loan_returned",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 2.743,
+      "details": ".                                                                        [100%]\n1 passed, 11 warnings in 0.99s\n"
+    },
+    {
+      "test_case_id": "TC-13",
+      "title": "Repeat borrowing is blocked when book or account is ineligible",
+      "related_requirements": "REQ-11;REQ-03;REQ-06",
+      "expected_result": "No invalid request is created; system explains the availability or account restriction.",
+      "pytest_node": "tests/test_app.py::test_member_with_unpaid_fine_cannot_request_another_book",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 2.764,
+      "details": ".                                                                        [100%]\n1 passed, 10 warnings in 1.03s\n"
+    },
+    {
+      "test_case_id": "TC-14",
+      "title": "Admin reviews an access request and approves or rejects it",
+      "related_requirements": "REQ-03;REQ-05;REQ-06",
+      "expected_result": "Each decision updates the request status, is visible to User, and is recorded in the audit log.",
+      "pytest_node": "tests/test_app.py::test_admin_can_approve_pending_access_and_audit_it",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 3.072,
+      "details": ".                                                                        [100%]\n1 passed, 10 warnings in 1.35s\n"
+    },
+    {
+      "test_case_id": "TC-15",
+      "title": "Admin applies and removes account sanctions",
+      "related_requirements": "REQ-13;REQ-05;REQ-06",
+      "expected_result": "Admin can apply/remove permitted restrictions; access follows account status; each action, reason, and timestamp is logged.",
+      "pytest_node": "tests/test_app.py::test_admin_can_suspend_member_and_audit_action",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 2.977,
+      "details": ".                                                                        [100%]\n1 passed, 6 warnings in 1.30s\n"
+    },
+    {
+      "test_case_id": "TC-16",
+      "title": "Suspended or banned User cannot read digital books",
+      "related_requirements": "REQ-13;REQ-10;REQ-06",
+      "expected_result": "Restricted account cannot access protected reading functions; denial is recorded as required.",
+      "pytest_node": "tests/test_app.py::test_suspended_member_cannot_read_even_with_active_loan",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 3.069,
+      "details": ".                                                                        [100%]\n1 passed, 6 warnings in 1.26s\n"
+    },
+    {
+      "test_case_id": "TC-17",
+      "title": "Copyright violation fine follows confirmed severity level ",
+      "related_requirements": "REQ-04;REQ-08",
+      "expected_result": "The system creates fines of 10,000 VND for Level 1, 20,000 VND for Level 2, and 50,000 VND for Level 3 only after the violations are confirmed. Each fine is linked to its violation record, displays the correct amount and payment status, and is visible to the affected member.",
+      "pytest_node": "tests/test_app.py::test_overdue_fine_uses_full_overdue_days_and_configured_daily_rate",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 3.194,
+      "details": ".                                                                        [100%]\n1 passed, 11 warnings in 1.31s\n"
+    },
+    {
+      "test_case_id": "TC-18",
+      "title": "Audit log cannot be viewed by a normal User",
+      "related_requirements": "REQ-05;REQ-06",
+      "expected_result": "System denies access to audit records; no audit data is disclosed.",
+      "pytest_node": "tests/test_app.py::test_member_cannot_view_admin_audit_log",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 2.879,
+      "details": ".                                                                        [100%]\n1 passed, 4 warnings in 1.00s\n"
+    },
+    {
+      "test_case_id": "TC-19",
+      "title": "Member can reserve a book with no available digital copies",
+      "related_requirements": "REQ-05",
+      "expected_result": "A reservation is added to the queue and its status is shown to the member. No digital access is granted before a copy becomes available.",
+      "pytest_node": "tests/test_app.py::test_member_can_reserve_book_when_no_copies_available",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 3.056,
+      "details": ".                                                                        [100%]\n1 passed, 7 warnings in 1.13s\n"
+    },
+    {
+      "test_case_id": "TC-20",
+      "title": "Member is notified of successful renewal and updated expiry date",
+      "related_requirements": "REQ-07",
+      "expected_result": "The system confirms the successful renewal to the member, updates the loan expiry date according to the renewal rules, and records the renewal count. The member can renew the same loan no more than twice.",
+      "pytest_node": "tests/test_app.py::test_return_marks_next_reservation_ready_and_records_audit",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 3.343,
+      "details": ".                                                                        [100%]\n1 passed, 11 warnings in 1.61s\n"
+    },
+    {
+      "test_case_id": "TC-21",
+      "title": "Member is notified when their account is banned due to suspected copyright infringement",
+      "related_requirements": "REQ-15",
+      "expected_result": "The system sends a notification informing the member that their account has been banned due to suspected copyright infringement. The notification is associated with the correct member account, and no unrelated member is notified.",
+      "pytest_node": "tests/test_app.py::test_overdue_loan_appears_in_member_notifications",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 2.883,
+      "details": ".                                                                        [100%]\n1 passed, 9 warnings in 1.08s\n"
+    },
+    {
+      "test_case_id": "TC-22",
+      "title": "Audit log records reservation, return, and fine transactions",
+      "related_requirements": "REQ-16",
+      "expected_result": "Each reservation action, return/loan closure, and fine creation or adjustment has its own accurate audit record containing actor/system source, timestamp, transaction type, related book/loan/reservation/member, and relevant details. No performed transaction is missing. This test verifies circulation/financial records, not authentication or access-control events.",
+      "pytest_node": "tests/test_app.py::test_reservation_return_fine_transactions_are_audited",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 3.496,
+      "details": ".                                                                        [100%]\n1 passed, 19 warnings in 1.66s\n"
+    },
+    {
+      "test_case_id": "TC-23",
+      "title": "Web forms reject injection and safely encode script input",
+      "related_requirements": "REQ-15",
+      "expected_result": "Input is handled as data, not executable SQL or script; no unauthorized data change occurs and no script executes in the browser.",
+      "pytest_node": "tests/test_app.py::test_search_escapes_script_input_in_rendered_html",
+      "status": "PASS",
+      "actual_result": "Mapped pytest test passed.",
+      "duration_seconds": 2.145,
+      "details": ".                                                                        [100%]\n1 passed, 1 warning in 0.41s\n"
+    }
+  ],
+  "note": "Only mapped tests are executed. NOT_AUTOMATED cases are explicitly not treated as passing."
+}

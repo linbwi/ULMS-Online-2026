@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Quản lý kho sách{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2><i class="bi bi-book"></i> Quản lý kho sách</h2>
+  <a href="{{ url_for('admin_add_book') }}" class="btn btn-primary btn-sm">+ Thêm sách</a>
+</div>
+<div class="table-responsive">
+  <table class="table table-hover bg-white">
+    <thead class="table-light">
+      <tr>
+        <th>ISBN</th>
+        <th>Tiêu đề</th>
+        <th>Tác giả</th>
+        <th>Chủ đề</th>
+        <th>Năm</th>
+        <th>Bản</th>
+        <th>Hạn mượn</th>
+        <th>Trạng thái</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for b in books %}
+      <tr class="{{ 'table-secondary' if b.status != 'Available' else '' }}">
+        <td>{{ b.isbn }}</td>
+        <td>{{ b.title }}</td>
+        <td>{{ b.author }}</td>
+        <td>{{ b.subject or '—' }}</td>
+        <td>{{ b.year or '—' }}</td>
+        <td>{{ b.available_copies }}/{{ b.total_copies }}</td>
+        <td>{{ b.loan_days }} ngày</td>
+        <td>
+          <span class="badge bg-{{ 'success' if b.status=='Available' else ('danger' if b.status=='NoCopyright' else 'secondary') }}">
+            {{ b.display_status }}
+          </span>
+        </td>
+        <td class="text-nowrap">
+          <a href="{{ url_for('admin_edit_book', book_id=b.id) }}" class="btn btn-sm btn-outline-primary">Sửa</a>
+          <form method="post" action="{{ url_for('admin_delete_book', book_id=b.id) }}" class="d-inline"
+                onsubmit="return confirm('Xóa sách này? Chỉ xóa khi không còn giao dịch.')">
+            <button class="btn btn-sm btn-outline-danger">Xóa</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,398 @@
+[
+  {
+    "source_id": "REQ-01",
+    "target_id": "UC-01",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Register / Log in to Web Portal"
+  },
+  {
+    "source_id": "REQ-06",
+    "target_id": "UC-01",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Register / Log in to Web Portal"
+  },
+  {
+    "source_id": "REQ-02",
+    "target_id": "UC-02",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Search Online Catalogue"
+  },
+  {
+    "source_id": "REQ-03",
+    "target_id": "UC-03",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Request Digital Access to a Book"
+  },
+  {
+    "source_id": "REQ-06",
+    "target_id": "UC-03",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Request Digital Access to a Book"
+  },
+  {
+    "source_id": "REQ-07",
+    "target_id": "UC-04",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Renew Digital Loan Online"
+  },
+  {
+    "source_id": "REQ-06",
+    "target_id": "UC-04",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Renew Digital Loan Online"
+  },
+  {
+    "source_id": "REQ-12",
+    "target_id": "UC-05",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Manage Digital Loan Expiry and Access Revocation"
+  },
+  {
+    "source_id": "REQ-08",
+    "target_id": "UC-06",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: View Loans, Borrowing History and Fines"
+  },
+  {
+    "source_id": "REQ-04",
+    "target_id": "UC-06",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: View Loans, Borrowing History and Fines"
+  },
+  {
+    "source_id": "REQ-10",
+    "target_id": "UC-07",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Read Digital Books Online"
+  },
+  {
+    "source_id": "REQ-12",
+    "target_id": "UC-07",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Read Digital Books Online"
+  },
+  {
+    "source_id": "REQ-06",
+    "target_id": "UC-07",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Read Digital Books Online"
+  },
+  {
+    "source_id": "REQ-03",
+    "target_id": "UC-08",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Review and Decide Digital Access Requests"
+  },
+  {
+    "source_id": "REQ-05",
+    "target_id": "UC-08",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Review and Decide Digital Access Requests"
+  },
+  {
+    "source_id": "REQ-06",
+    "target_id": "UC-08",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Review and Decide Digital Access Requests"
+  },
+  {
+    "source_id": "REQ-09",
+    "target_id": "UC-09",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Manage Favourite Books"
+  },
+  {
+    "source_id": "REQ-11",
+    "target_id": "UC-10",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Request Access Again to a Previously Borrowed Book"
+  },
+  {
+    "source_id": "REQ-03",
+    "target_id": "UC-10",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Request Access Again to a Previously Borrowed Book"
+  },
+  {
+    "source_id": "REQ-06",
+    "target_id": "UC-10",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Request Access Again to a Previously Borrowed Book"
+  },
+  {
+    "source_id": "REQ-13",
+    "target_id": "UC-11",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Manage Account Violations and Sanctions"
+  },
+  {
+    "source_id": "REQ-05",
+    "target_id": "UC-11",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Manage Account Violations and Sanctions"
+  },
+  {
+    "source_id": "REQ-06",
+    "target_id": "UC-11",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Manage Account Violations and Sanctions"
+  },
+  {
+    "source_id": "REQ-10",
+    "target_id": "UC-11",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Manage Account Violations and Sanctions"
+  },
+  {
+    "source_id": "REQ-05",
+    "target_id": "UC-12",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Reserve an Unavailable Digital Book"
+  },
+  {
+    "source_id": "REQ-06",
+    "target_id": "UC-12",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Reserve an Unavailable Digital Book"
+  },
+  {
+    "source_id": "REQ-15",
+    "target_id": "UC-13",
+    "relationship": "Requirement -> Use Case",
+    "description": "Related to use case: Receive Library Notifications"
+  },
+  {
+    "source_id": "REQ-01",
+    "target_id": "TC-01",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Register and log in with valid university credentials"
+  },
+  {
+    "source_id": "REQ-02",
+    "target_id": "TC-02",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Catalogue search returns results within 2 seconds"
+  },
+  {
+    "source_id": "REQ-03",
+    "target_id": "TC-03",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: User submits a digital access request"
+  },
+  {
+    "source_id": "REQ-07",
+    "target_id": "TC-04",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Eligible User renews a digital loan"
+  },
+  {
+    "source_id": "REQ-06",
+    "target_id": "TC-05",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: User cannot access Admin-only functions"
+  },
+  {
+    "source_id": "REQ-10",
+    "target_id": "TC-06",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Expired digital access is revoked automatically"
+  },
+  {
+    "source_id": "REQ-12",
+    "target_id": "TC-06",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Expired digital access is revoked automatically"
+  },
+  {
+    "source_id": "REQ-08",
+    "target_id": "TC-07",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: User views loan history and fines"
+  },
+  {
+    "source_id": "REQ-04",
+    "target_id": "TC-07",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: User views loan history and fines"
+  },
+  {
+    "source_id": "REQ-05",
+    "target_id": "TC-08",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Audit log records authentication and access-control decisions"
+  },
+  {
+    "source_id": "REQ-09",
+    "target_id": "TC-09",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: User adds and removes a book from favourites"
+  },
+  {
+    "source_id": "REQ-10",
+    "target_id": "TC-10",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: User reads a book with valid approved access"
+  },
+  {
+    "source_id": "REQ-12",
+    "target_id": "TC-10",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: User reads a book with valid approved access"
+  },
+  {
+    "source_id": "REQ-10",
+    "target_id": "TC-11",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: User without valid access is denied online reading"
+  },
+  {
+    "source_id": "REQ-12",
+    "target_id": "TC-11",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: User without valid access is denied online reading"
+  },
+  {
+    "source_id": "REQ-06",
+    "target_id": "TC-11",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: User without valid access is denied online reading"
+  },
+  {
+    "source_id": "REQ-11",
+    "target_id": "TC-12",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: User requests access again to a previously borrowed book"
+  },
+  {
+    "source_id": "REQ-03",
+    "target_id": "TC-12",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: User requests access again to a previously borrowed book"
+  },
+  {
+    "source_id": "REQ-11",
+    "target_id": "TC-13",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Repeat borrowing is blocked when book or account is ineligible"
+  },
+  {
+    "source_id": "REQ-03",
+    "target_id": "TC-13",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Repeat borrowing is blocked when book or account is ineligible"
+  },
+  {
+    "source_id": "REQ-06",
+    "target_id": "TC-13",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Repeat borrowing is blocked when book or account is ineligible"
+  },
+  {
+    "source_id": "REQ-03",
+    "target_id": "TC-14",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Admin reviews an access request and approves or rejects it"
+  },
+  {
+    "source_id": "REQ-05",
+    "target_id": "TC-14",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Admin reviews an access request and approves or rejects it"
+  },
+  {
+    "source_id": "REQ-06",
+    "target_id": "TC-14",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Admin reviews an access request and approves or rejects it"
+  },
+  {
+    "source_id": "REQ-13",
+    "target_id": "TC-15",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Admin applies and removes account sanctions"
+  },
+  {
+    "source_id": "REQ-05",
+    "target_id": "TC-15",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Admin applies and removes account sanctions"
+  },
+  {
+    "source_id": "REQ-06",
+    "target_id": "TC-15",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Admin applies and removes account sanctions"
+  },
+  {
+    "source_id": "REQ-13",
+    "target_id": "TC-16",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Suspended or banned User cannot read digital books"
+  },
+  {
+    "source_id": "REQ-10",
+    "target_id": "TC-16",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Suspended or banned User cannot read digital books"
+  },
+  {
+    "source_id": "REQ-06",
+    "target_id": "TC-16",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Suspended or banned User cannot read digital books"
+  },
+  {
+    "source_id": "REQ-04",
+    "target_id": "TC-17",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Copyright violation fine follows confirmed severity level"
+  },
+  {
+    "source_id": "REQ-08",
+    "target_id": "TC-17",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Copyright violation fine follows confirmed severity level"
+  },
+  {
+    "source_id": "REQ-05",
+    "target_id": "TC-18",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Audit log cannot be viewed by a normal User"
+  },
+  {
+    "source_id": "REQ-06",
+    "target_id": "TC-18",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Audit log cannot be viewed by a normal User"
+  },
+  {
+    "source_id": "REQ-05",
+    "target_id": "TC-19",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Member can reserve a book with no available digital copies"
+  },
+  {
+    "source_id": "REQ-07",
+    "target_id": "TC-20",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Member is notified of successful renewal and updated expiry date"
+  },
+  {
+    "source_id": "REQ-15",
+    "target_id": "TC-21",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Member is notified when their account is banned due to suspected copyright infringement"
+  },
+  {
+    "source_id": "REQ-16",
+    "target_id": "TC-22",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Audit log records reservation, return, and fine transactions"
+  },
+  {
+    "source_id": "REQ-15",
+    "target_id": "TC-23",
+    "relationship": "Requirement -> Test Case",
+    "description": "Verified by test case: Web forms reject injection and safely encode script input"
+  }
+]

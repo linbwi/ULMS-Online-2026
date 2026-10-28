@@ -1,0 +1,33 @@
+{
+  "project": "University Library Management System Online",
+  "workbook": "ULMS_Online_2026_Requirements_Demo.xlsx",
+  "generated_at_note": "Generated locally when this script was run.",
+  "sheet_record_counts": {
+    "project": 1,
+    "stakeholders": 3,
+    "requirements": 17,
+    "nfrs": 10,
+    "actors": 4,
+    "use_cases": 13,
+    "change_requests": 8,
+    "hazards": 8,
+    "elicitation_sessions": 3,
+    "process_activities": 6,
+    "test_cases": 23,
+    "test_case_analysis": 44
+  },
+  "requirement_type_counts": {
+    "Functional": 16,
+    "Security": 1
+  },
+  "requirement_priority_counts": {
+    "Must": 11,
+    "Should": 6
+  },
+  "output_files": [
+    "case-study-srs\\output\\ULMS_SRS.md",
+    "case-study-srs\\output\\ULMS_requirements.csv",
+    "case-study-srs\\output\\ULMS_traceability.json"
+  ],
+  "traceability_links": 66
+}

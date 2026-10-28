@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Thông báo{% endblock %}
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-bell text-warning"></i> Thông báo thư viện</h2>
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card p-4 shadow-sm border-0">
+            <h5 class="fw-bold text-warning mb-3"><i class="fas fa-clock me-2"></i>Sắp hết hạn mượn (Còn 1 ngày)</h5>
+            {% if due_soon %}
+            <ul class="list-group list-group-flush">
+                {% for l in due_soon %}
+                <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong class="text-primary">{{ l.book.title }}</strong><br>
+                        <small class="text-muted">Hạn trả: {{ l.due_date.strftime('%d/%m/%Y') }} (Chỉ còn 1 ngày)</small>
+                    </div>
+                    {% if l.can_renew() %}
+                    <form method="post" action="{{ url_for('renew_loan', loan_id=l.id) }}">
+                        <button class="btn btn-sm btn-outline-primary"><i class="fas fa-redo"></i> Mượn lại / Gia hạn</button>
+                    </form>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-muted mb-0">Không có sách nào sắp hết hạn trong 1 ngày tới.</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card p-4 shadow-sm border-0">
+            <h5 class="fw-bold text-danger mb-3"><i class="fas fa-exclamation-circle me-2"></i>Nhắc quá hạn mượn</h5>
+            {% if overdue %}
+            <ul class="list-group list-group-flush">
+                {% for l in overdue %}
+                <li class="list-group-item px-0">
+                    <strong class="text-danger">{{ l.book.title }}</strong><br>
+                    <span class="text-danger font-monospace">Quá hạn {{ l.days_overdue() }} ngày</span> — hạn trả {{ l.due_date.strftime('%d/%m/%Y') }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-muted mb-0">Bạn không có sách nào quá hạn.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Xác nhận thanh toán{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h2 class="h4 mb-3"><i class="bi bi-credit-card me-2"></i>Xác nhận thanh toán tiền phạt</h2>
+        <div class="alert alert-info">Đây là <strong>thanh toán mô phỏng</strong> phục vụ bản final của dự án. Không có cổng thanh toán thật và không có tiền thật được chuyển.</div>
+        <dl class="row">
+          <dt class="col-sm-5">Mã khoản phạt</dt><dd class="col-sm-7">#{{ fine.id }}</dd>
+          {% if fine.violation %}
+          <dt class="col-sm-5">Mã vi phạm</dt><dd class="col-sm-7">#{{ fine.violation.id }}</dd>
+          <dt class="col-sm-5">Loại vi phạm</dt><dd class="col-sm-7">{{ fine.violation.violation_type }}</dd>
+          <dt class="col-sm-5">Mức độ</dt><dd class="col-sm-7">Level {{ fine.violation.severity }}</dd>
+          <dt class="col-sm-5">Lý do</dt><dd class="col-sm-7">{{ fine.description or fine.violation.description or 'Vi phạm bản quyền' }}</dd>
+          {% else %}
+          <dt class="col-sm-5">Sách</dt><dd class="col-sm-7">{{ fine.loan.book.title if fine.loan and fine.loan.book else '—' }}</dd>
+          <dt class="col-sm-5">Số ngày quá hạn</dt><dd class="col-sm-7">{{ fine.days_overdue }} ngày</dd>
+          {% endif %}
+          <dt class="col-sm-5">Số tiền cần thanh toán</dt><dd class="col-sm-7 fs-5 fw-bold text-danger">{{ "{:,.0f}".format(fine.amount) }} VND</dd>
+          <dt class="col-sm-5">Phương thức</dt><dd class="col-sm-7">Mô phỏng nội bộ</dd>
+        </dl>
+        <form method="post" class="d-flex flex-wrap gap-2">
+          <button type="submit" class="btn btn-primary" onclick="return confirm('Xác nhận hoàn tất thanh toán mô phỏng? Không có tiền thật được chuyển.');"><i class="bi bi-check-circle me-1"></i>Xác nhận thanh toán</button>
+          <a class="btn btn-outline-secondary" href="{{ url_for('my_loans') }}#fines">Hủy</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
